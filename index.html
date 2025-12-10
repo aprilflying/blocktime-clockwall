@@ -51,7 +51,7 @@
         0 32px 90px rgba(15, 23, 42, 0.95),
         0 0 0 1px rgba(79, 70, 229, 0.45);
       position: relative;
-      z-index: 10; /* Ensure card is above background but below link */
+      z-index: 10;
     }
     .hero {
       display: flex;
@@ -184,7 +184,7 @@
     .bottom-space {
       height: 18vh;
       min-height: 120px;
-      pointer-events: none; /* Prevents bottom space from blocking clicks */
+      pointer-events: none;
     }
     .background-link {
       position: fixed;
@@ -194,26 +194,22 @@
       height: 18vh;
       min-height: 120px;
       cursor: pointer;
-      z-index: 100; /* Highest z-index to ensure it's clickable */
+      z-index: 100;
     }
   </style>
 </head>
 <body>
-  <!-- Top space for Nirvana Labs logo -->
   <div class="top-space"></div>
 
-  <!-- Centered clockwall content -->
   <div class="content">
     <div class="app">
       <div class="hero">
         <div class="hero-title">BLOCKTIME CLOCKWALL</div>
         <div class="hero-subtitle">Each full sweep = average block time</div>
       </div>
-      <div class="clock-grid" id="clockGrid">
-        <!-- clocks injected by JS -->
-      </div>
+      <div class="clock-grid" id="clockGrid"></div>
       <div class="disclaimer-row">
-        Based on recent on-chain data where available · Not live.
+        Based on Token Terminal 7-day averages where available · Not live.
       </div>
       <div class="footer-row">
         Slowest chains on the left, fastest on the right.
@@ -221,24 +217,22 @@
     </div>
   </div>
 
-  <!-- Bottom space for "Learn more → nirvanalabs.io" -->
   <div class="bottom-space"></div>
 
-  <!-- Clickable overlay for the bottom text (highest z-index) -->
   <a href="https://nirvanalabs.io" target="_blank" rel="noopener" class="background-link" aria-label="Visit nirvanalabs.io"></a>
 
   <script>
     const CHAINS = [
-      { id: "btc", name: "Bitcoin", blockSeconds: 600, color: "#f97316" },
-      { id: "eth", name: "Ethereum", blockSeconds: 12, color: "#627eea" },
-      { id: "op", name: "Optimism", blockSeconds: 2, color: "#ff4d4d" },
-      { id: "base", name: "Base", blockSeconds: 2, color: "#0052ff" },
+      { id: "btc", name: "Bitcoin", blockSeconds: 607, color: "#f97316" },
+      { id: "eth", name: "Ethereum", blockSeconds: 12.1, color: "#627eea" },
+      { id: "op", name: "Optimism", blockSeconds: 2.0, color: "#ff4d4d" },
+      { id: "base", name: "Base", blockSeconds: 2.0, color: "#0052ff" },
       { id: "bnb", name: "BNB Chain", blockSeconds: 0.75, color: "#f3ba2f" },
-      { id: "sol", name: "Solana", blockSeconds: 0.39, color: "#14f195" },
+      { id: "apt", name: "Aptos", blockSeconds: 0.55, color: "#00ff9d" },
+      { id: "sol", name: "Solana", blockSeconds: 0.41, color: "#14f195" },
+      { id: "sui", name: "Sui", blockSeconds: 0.41, color: "#00d4ff" },
       { id: "monad", name: "Monad", blockSeconds: 0.4, color: "#a855f7" },
-      { id: "arb", name: "Arbitrum", blockSeconds: 0.25, color: "#12c2e9" },
-      { id: "sui", name: "Sui", blockSeconds: 0.24, color: "#00d4ff" },
-      { id: "apt", name: "Aptos", blockSeconds: 0.07, color: "#00ff9d" }
+      { id: "arb", name: "Arbitrum", blockSeconds: 0.26, color: "#12c2e9" }
     ];
 
     const grid = document.getElementById("clockGrid");
