@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nirvana Labs · Blocktime Clock</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=neue-plak-wide:800|neue-plak:700" rel="stylesheet" />
+  <style>
+    :root {
+      --clock-size: clamp(130px, 18vh, 180px);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 96px 16px 96px;
+      background:
+        url("background.png") center center / cover no-repeat,
+        radial-gradient(circle at bottom right, rgba(76, 29, 149, 0.8), #020617 70%);
+      color: #f9fafb;
+      font-family: "Neue Plak", "Neue Plak Wide", system-ui, sans-serif;
+    }
+    .app {
+      width: 100%;
+      max-width: 1180px;
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      border-radius: 28px;
+      padding: 18px 20px 14px;
+      box-shadow:
+        0 32px 90px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(79, 70, 229, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 2px;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: "Neue Plak Wide", sans-serif;
+      font-size: clamp(1.1rem, 4vw, 1.25rem);
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-shadow: 0 0 28px rgba(56, 189, 248, 0.8), 0 0 18px rgba(129, 140, 248, 0.9);
+    }
+    .hero-subtitle {
+      font-size: clamp(0.7rem, 2.5vw, 0.78rem);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+    .clock-grid {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: clamp(8px, 2vw, 12px);
+    }
+    .clock-card {
+      position: relative;
+      border-radius: 22px;
+      padding: 14px 10px 12px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .clock-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top, rgba(79, 70, 229, 0.22), transparent 55%);
+      opacity: 0.9;
+      border-radius: inherit;
+      mix-blend-mode: screen;
+    }
+    .clock-face {
+      position: relative;
+      width: var(--clock-size);
+      height: var(--clock-size);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 1));
+      border: 2px solid rgba(148, 163, 184, 0.9);
+      box-shadow:
+        inset 0 0 0 1px rgba(15, 42, 0.9),
+        0 0 22px rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+    .clock-center {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px rgba(248, 250, 252, 0.8);
+    }
+    .clock-tick {
+      position: absolute;
+      width: 2px;
+      height: 10px;
+      background: rgba(148, 163, 184, 0.7);
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+    }
+    .clock-hand-wrapper {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 50%;
+      animation: spin var(--block-time, 2s) linear infinite;
+    }
+    .clock-hand {
+      position: absolute;
+      width: 3px;
+      height: calc(var(--clock-size) * 0.37);
+      left: 50%;
+      top: 50%;
+      transform-origin: 50% 100%;
+      transform: translate(-50%, -100%);
+      border-radius: 999px;
+      box-shadow: 0 0 14px currentColor;
+      background: currentColor;
+    }
+    .clock-label {
+      font-size: clamp(0.75rem, 3vw, 0.85rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .clock-meta {
+      font-size: clamp(0.65rem, 2.5vw, 0.76rem);
+      color: #9ca3af;
+      text-align: center;
+    }
+    .disclaimer-row {
+      margin-top: 12px;
+      font-size: clamp(0.65rem, 2vw, 0.7rem);
+      color: #9ca3af;
+      text-align: center;
+    }
+    .footer-row {
+      margin-top: 6px;
+      font-size: clamp(0.65rem, 2vw, 0.7rem);
+      color: #9ca3af;
+      text-align: center;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .background-link {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 380px;
+      height: 50px;
+      cursor: pointer;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <div class="hero-title">BLOCKTIME CLOCK</div>
+      <div class="hero-subtitle">Each full sweep = average block time</div>
+    </div>
+    <div class="clock-grid" id="clockGrid">
+      <!-- clocks injected by JS -->
+    </div>
+    <div class="disclaimer-row">
+      Based on recent on-chain data where available · Not live.
+    </div>
+    <div class="footer-row">
+      Slowest chains on the left, fastest on the right.
+    </div>
+  </div>
+
+  <a href="https://nirvanalabs.io" target="_blank" rel="noopener" class="background-link" aria-label="Visit nirvanalabs.io"></a>
+
+  <script>
+    const CHAINS = [
+      { id: "btc", name: "Bitcoin", blockSeconds: 600, color: "#f97316" },
+      { id: "eth", name: "Ethereum", blockSeconds: 12, color: "#627eea" },
+      { id: "op", name: "Optimism", blockSeconds: 2, color: "#ff4d4d" },
+      { id: "base", name: "Base", blockSeconds: 2, color: "#0052ff" },
+      { id: "bnb", name: "BNB Chain", blockSeconds: 0.75, color: "#f3ba2f" },
+      { id: "sol", name: "Solana", blockSeconds: 0.4, color: "#14f195" },
+      { id: "monad", name: "Monad", blockSeconds: 0.4, color: "#a855f7" },
+      { id: "arb", name: "Arbitrum", blockSeconds: 0.25, color: "#12c2e9" },
+      { id: "sui", name: "Sui", blockSeconds: 0.24, color: "#00d4ff" },
+      { id: "apt", name: "Aptos", blockSeconds: 0.07, color: "#00ff9d" }
+    ];
+
+    const grid = document.getElementById("clockGrid");
+
+    function formatBlockTime(sec) {
+      if (sec >= 60) {
+        const minutes = Math.floor(sec / 60);
+        const seconds = Math.round(sec % 60);
+        return seconds > 0 ? `${minutes} min ${seconds}s` : `${minutes} min`;
+      }
+      return sec < 1 ? sec.toFixed(2) + " s" : sec.toFixed(2) + " s";
+    }
+
+    CHAINS.forEach(chain => {
+      const card = document.createElement("div");
+      card.className = "clock-card";
+
+      const face = document.createElement("div");
+      face.className = "clock-face";
+
+      for (let i = 0; i < 12; i++) {
+        const tick = document.createElement("div");
+        tick.className = "clock-tick";
+        const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+        const radius = 80;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        tick.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${angle + Math.PI/2}rad)`;
+        face.appendChild(tick);
+      }
+
+      const handWrapper = document.createElement("div");
+      handWrapper.className = "clock-hand-wrapper";
+      handWrapper.style.setProperty("--block-time", chain.blockSeconds + "s");
+
+      const hand = document.createElement("div");
+      hand.className = "clock-hand";
+      hand.style.color = chain.color;
+      hand.style.background = chain.color;
+      handWrapper.appendChild(hand);
+      face.appendChild(handWrapper);
+
+      const center = document.createElement("div");
+      center.className = "clock-center";
+      face.appendChild(center);
+
+      const label = document.createElement("div");
+      label.className = "clock-label";
+      label.textContent = chain.name;
+
+      const meta = document.createElement("div");
+      meta.className = "clock-meta";
+      meta.textContent = `~${formatBlockTime(chain.blockSeconds)} per block`;
+
+      card.appendChild(face);
+      card.appendChild(label);
+      card.appendChild(meta);
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
